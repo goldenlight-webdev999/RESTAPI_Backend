@@ -1,0 +1,116 @@
+html {
+    height: 100%;
+
+    background: rgba(250,250,251,1);
+    background: -moz-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(250,250,251,1)), color-stop(100%, rgba(73,83,94,1)));
+    background: -webkit-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -o-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -ms-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: linear-gradient(to bottom, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+}
+
+body {
+    font-family: 'Cabin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    background: transparent;
+    color: #49535E;
+}
+
+.card-container.card {
+    max-width: 384px;
+    padding: 40px;
+}
+
+.btn {
+    font-weight: 700;
+    height: 36px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.card {
+    background-color: #F7F7F7;
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    margin-top: 50px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.profile-img-card {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 10px;
+    display: block;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+}
+
+.profile-name-card {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 1px;
+    margin: 10px 0 15px;
+    min-height: 1em;
+}
+
+.form-signin input[type=password],
+.form-signin input[type=text],
+.form-signin button {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.form-signin .form-control:focus {
+    border-color: #66CC66;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.btn.btn-signin {
+    background-color: #49535E;
+    padding: 5px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    height: 36px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: none;
+    -o-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.btn.btn-signin:hover,
+.btn.btn-signin:active,
+.btn.btn-signin:focus {
+    background-color: #66CC66;
+}
+
+.forgot-password {
+    color: rgb(104, 145, 162);
+}
+
+.forgot-password:hover,
+.forgot-password:active,
+.forgot-password:focus{
+    color: #66CC66;
+}

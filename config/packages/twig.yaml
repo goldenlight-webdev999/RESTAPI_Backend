@@ -1,0 +1,8 @@
+twig:
+    paths:
+      '%kernel.project_dir%/src/UI/Http/Security/Views': security
+      '%kernel.project_dir%/src/Templates/mailer': mailer
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
+    globals:
+      captcha_public_key: '%captcha_public_key%'

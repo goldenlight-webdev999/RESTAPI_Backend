@@ -1,0 +1,27 @@
+api_controllers:
+  resource: '../src/UI/Http/PublicRest/Controllers/'
+  type: annotation
+  prefix: /public/api
+
+api_public_controllers:
+  resource: '../src/UI/Http/Rest/Controllers/'
+  type: annotation
+  prefix: /api
+
+oauth_controllers:
+  resource: '../src/UI/Http/Security/Controllers/'
+  type: annotation
+  prefix: /security
+
+webhook_controllers:
+  resource: '../src/UI/Http/Webhook/Controllers/'
+  type: annotation
+  prefix: /webhook
+
+fos_oauth_server_token:
+  resource: '../src/UI/Http/Security/Controllers/TokenController.php'
+  type: annotation
+  prefix: /oauth/v2/
+
+fos_oauth_server_authorize:
+  resource: "@FOSOAuthServerBundle/Resources/config/routing/authorize.xml"

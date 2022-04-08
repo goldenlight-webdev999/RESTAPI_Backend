@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Custom fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ asset('auth/style.css') }}">
+
+    <title>Allow access</title>
+</head>
+<body>
+<div class="container">
+    <div class="card card-container">
+        <h2>An application would like to connect to your account.</h2>
+        <p class="text-card">The app <span class="app-name">{{ client.getName() }}</span> would like the ability to access to your account.</p>
+        <p class="text-card">Allow <span class="app-name">{{ client.getName() }}</span> access?</p>
+        {{ form_start(form, {'method': 'POST', 'action': path('fos_oauth_server_authorize'), 'attr': {'class': 'form-access'} }) }}
+        <button class="btn btn-lg btn-primary btn-allow" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}">Allow</button>
+            <button class="btn btn-lg btn-primary btn-deny" type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}">Deny</button>
+        {{ form_row(form.client_id) }}
+            {{ form_row(form.response_type) }}
+            {{ form_row(form.redirect_uri) }}
+            {{ form_row(form.state) }}
+            {{ form_row(form.scope) }}
+            {{ form_rest(form) }}
+        </form>
+    </div>
+</div>
+</body>
+</html>

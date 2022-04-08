@@ -1,0 +1,68 @@
+security:
+  encoders:
+    App\Infrastructure\Database\Entity\User:
+      algorithm: argon2i
+      #memory_cost: 16384 # Amount in KiB. 16 MiB
+      #time_cost: 2 # Number of iterations
+      #threads: 4 # Number of parallel threads
+
+  providers:
+    user_provider:
+      id: App\Infrastructure\OAuth2\Provider\UserProvider
+
+  firewalls:
+
+    api_private:
+      access_denied_handler: App\Infrastructure\Exception\Handler\AccessDeniedHandler
+      pattern: ^/api
+      stateless: true
+      anonymous: false
+      context: main
+      fos_oauth: true
+
+    general:
+      pattern: ^/
+      anonymous: ~
+      security: true
+      context: main
+      simple_form:
+        authenticator: App\Infrastructure\Captcha\CaptchaAuthenticator
+        check_path: /security/login
+        login_path: /security/login
+
+    api_public:
+      access_denied_handler: App\Infrastructure\Exception\Handler\AccessDeniedHandler
+      pattern:    ^/public/api
+      stateless:  true
+      anonymous:  true
+      context: main
+
+    webhook:
+      access_denied_handler: App\Infrastructure\Exception\Handler\AccessDeniedHandler
+      pattern:    ^/webhook
+      stateless:  true
+      anonymous:  ~
+      context: main
+
+    oauth_token:
+      access_denied_handler: App\Infrastructure\Exception\Handler\AccessDeniedHandler
+      pattern: ^/oauth/v2/token
+      security: false
+
+  access_control:
+    - { path: ^/api/users/me($|/.+), roles: ROLE_USER, methods: [ GET, POST, PATCH ] } #As regular user i can access only to my own resources
+    - { path: ^/api/users/[a-z0-9\-]+, roles: ROLE_ADMIN, methods: [ GET, POST, PATCH ] }
+    - {
+        path: ^/webhook/stripe,
+        methods: [ POST ],
+        roles: IS_AUTHENTICATED_ANONYMOUSLY,
+        ips:  [
+                54.187.174.169,
+                54.187.205.235,
+                54.187.216.72,
+                54.241.31.99,
+                54.241.31.102,
+                54.241.34.107,
+              ]
+      }
+    - { path: ^/webhook/stripe, roles: ROLE_NO_ACCESS }

@@ -1,0 +1,152 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: 'en'
+    captcha_public_key: '6LcOz2MUAAAAANOpWHgQXetTBehG8BPrRz2zVAi8'
+    captcha_private_key: '6LcOz2MUAAAAAF1orHW90it73NpQqCUW0QYxUsK5'
+    defaultSystemEmail: '%env(DEFAULT_SYSTEM_EMAIL)%'
+    proxy_connection_url: ''
+    appUrl: '%env(APP_URL)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+        bind:
+          $defaultSystemEmail: '%defaultSystemEmail%'
+          $stripeWebhookSigningSecret: '%env(STRIPE_WEBHOOK_KEY)%'
+          $stripeApiKey: '%env(STRIPE_WEBHOOK_KEY)%'
+          $paypalClientId: '%env(PAYPAL_CLIENT_ID)%'
+          $paypalSecret: '%env(PAYPAL_SECRET)%'
+          $paypalWebhookId: '%env(PAYPAL_WEBHOOK_ID)%'
+          $appUrl: '%appUrl%'
+          $appSecret: '%env(APP_SECRET)%'
+
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+      arguments:
+      - !service { class: PDO, factory: 'database_connection:getWrappedConnection' }
+      - { lock_mode: 1 }
+
+    OAuth2\OAuth2: '@fos_oauth_server.server'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{Infrastructure/Database/Entity,Infrastructure/Database/Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\UI\Http\PublicRest\Controllers\:
+        resource: '../src/UI/Http/PublicRest/Controllers/*'
+        tags:
+          - 'controller.service_arguments'
+
+    App\UI\Http\Webhook\Controllers\:
+        resource: '../src/UI/Http/Webhook/Controllers/*'
+        tags:
+          - 'controller.service_arguments'
+
+    App\UI\Http\Rest\Controllers\:
+        resource: '../src/UI/Http/Rest/Controllers/*'
+        tags:
+          - 'controller.service_arguments'
+          - 'security'
+
+    App\UI\Http\Security\Controllers\:
+        resource: '../src/UI/Http/Security/Controllers/*'
+        tags:
+          - 'controller.service_arguments'
+          - 'templating'
+          - 'form.factory'
+
+    App\Application\:
+        resource: "../src/Application"
+        public: false
+        tags:
+            - { name: tactician.handler, typehints: true }
+
+    App\UI\Cli\Commands\:
+      resource: '../src/UI/Cli/Commands'
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    metacleaner.listener.rate_limit_generate_key:
+      class: App\Infrastructure\EndPointLimits\Listeners\RateLimitGenerateKeyListener
+      tags:
+        - { name: kernel.event_listener, event: 'ratelimit.generate.key', method: 'onGenerateKey' }
+
+    metacleaner.listener.limit_exceeded_exception:
+        class: App\Infrastructure\EndPointLimits\Listeners\LimitExceededExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    metacleaner.listener.metacleaner_rate_limit_annotation:
+        class: App\Infrastructure\EndPointLimits\Listeners\MetacleanerRateLimitAnnotationListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: -9 }
+
+    metacleaner.listener.metacleaner_size_limit_annotation:
+        class: App\Infrastructure\EndPointLimits\Listeners\MetacleanerSizeLimitAnnotationListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController, priority: -9 }
+
+    metacleaner.exception_listener:
+        class: App\Infrastructure\Exception\Handler\ExceptionListener
+        arguments:
+          - '%kernel.debug%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
+
+    metacleaner.authentication_success_handler:
+      class: App\Infrastructure\Security\Listeners\AuthenticationSuccessListener
+      tags:
+        - { name: kernel.event_listener, event: security.interactive_login, method: onAuthenticationSuccess }
+
+    metacleaner.user_manager.mailer:
+      class: App\Infrastructure\UserManager\Mailer
+
+    App\Infrastructure\Captcha\CaptchaProvider:
+      public: true
+      class: App\Infrastructure\Captcha\CaptchaProvider
+      arguments:
+        $captchaKey: '%captcha_private_key%'
+        $proxyConnectionUrl: '%proxy_connection_url%'
+
+    App\Infrastructure\Stripe\StripeAdapter:
+      arguments:
+        $stripeApiKey: '%env(STRIPE_API_KEY)%'
+        $proxyConnectionUrl: '%proxy_connection_url%'
+
+    App\Infrastructure\Paypal\PaypalService: ~
+    App\Infrastructure\Stripe\StripeService: ~
+
+    App\Application\Command\Subscription\CancelAllSubscriptions\CancelAllSubscriptionsCommand $type: '@App\Infrastructure\Paypal\PaypalService'
+    App\Application\Command\Subscription\CancelAllSubscriptions\CancelAllSubscriptionsCommand $paypalSubscriptionTypeAdapter: '@App\Infrastructure\Paypal\PaypalService'
+    App\Domain\Subscription\Interfaces\PaymentGatewaySubscriptionTypeAdapterInterface: '@App\Infrastructure\Stripe\StripeSubscriptionTypeAdapter'
+    #App\Domain\Subscription\Interfaces\PaymentGatewaySubscriptionTypeAdapterInterface: '@App\Infrastructure\Paypal\PaypalSubscriptionTypeAdapter'
+    App\Domain\Subscription\Interfaces\PaymentGatewayServiceInterface: '@App\Infrastructure\Stripe\StripeService'
+    App\Domain\Subscription\Interfaces\PaymentGatewayServiceInterface $paypalpaymentGatewayService: '@App\Infrastructure\Paypal\PaypalService'
+    App\Domain\Subscription\Interfaces\PaymentGatewayServiceInterface $type: '@App\Infrastructure\Paypal\PaypalService'
+    App\Domain\Subscription\Interfaces\PaymentGatewayServiceInterface $paypalSubscriptionTypeAdapter: '@App\Infrastructure\Paypal\PaypalService'
+    App\Application\Command\Subscription\CancelAllSubscriptions $type: '@App\Infrastructure\Paypal\PaypalService'
+    App\Infrastructure\Paypal\Listeners: '@App\Infrastructure\Paypal\PaypalService'
+    #these were my attempts but didnt work
+    _instanceof:
+
+      App\Application\Command\CommandHandlerInterface:
+        public: true
+        tags:
+          - { name: tactician.handler, typehints: true, bus: command }
+
+      App\Application\Query\QueryHandlerInterface:
+        public: true
+        tags:
+        - { name: tactician.handler, typehints: true, bus: query }
+

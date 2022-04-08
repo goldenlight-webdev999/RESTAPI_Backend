@@ -1,0 +1,88 @@
+html {
+    height: 100%;
+
+    background: rgba(250,250,251,1);
+    background: -moz-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -webkit-gradient(left top, left bottom, color-stop(0%, rgba(250,250,251,1)), color-stop(100%, rgba(73,83,94,1)));
+    background: -webkit-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -o-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: -ms-linear-gradient(top, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+    background: linear-gradient(to bottom, rgba(250,250,251,1) 0%, rgba(73,83,94,1) 100%);
+}
+
+body {
+    font-family: 'Cabin', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    background: transparent;
+    color: #49535E;
+}
+
+.card-container.card {
+    padding: 40px;
+}
+
+.btn {
+    font-weight: 700;
+    height: 36px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    cursor: default;
+}
+
+.card {
+    background-color: #F7F7F7;
+    padding: 20px 25px 30px;
+    margin: 0 auto 25px;
+    margin-top: 50px;
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+.card h2 {
+    margin-bottom: 15px;
+}
+
+.text-card .app-name {
+    color: #23282C;
+    font-size: 1.1rem;
+}
+
+.form-access button {
+    margin: 10px;
+    padding: 5px 15px;
+    z-index: 1;
+    position: relative;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    background-color: #49535E;
+    font-weight: 700;
+    font-size: 1.1rem;
+    height: 36px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border: none;
+    -o-transition: all 0.2s;
+    -moz-transition: all 0.2s;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.btn.btn-allow:hover,
+.btn.btn-allow:active,
+.btn.btn-allow:focus {
+    background-color: #66CC66;
+}
+
+.btn.btn-deny:hover,
+.btn.btn-deny:active,
+.btn.btn-deny:focus {
+    background-color: #D56060;
+}

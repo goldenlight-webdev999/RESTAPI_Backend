@@ -1,0 +1,12 @@
+noxlogic_rate_limit:
+  enabled: true
+  storage_engine: redis
+  redis_client: default
+  rate_response_code: 429
+  rate_response_exception: App\Infrastructure\EndPointLimits\Exceptions\LimitExceededException
+  rate_response_message: 'You exceeded the rate limit'
+  display_headers: true
+  headers:
+    limit: X-RateLimit-Limit
+    remaining: X-RateLimit-Remaining
+    reset: X-RateLimit-Reset

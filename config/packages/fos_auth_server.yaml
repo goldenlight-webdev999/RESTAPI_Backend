@@ -1,0 +1,20 @@
+fos_oauth_server:
+    db_driver: orm
+    client_class: App\Infrastructure\OAuth2\Entity\OAuth2Client
+    access_token_class: App\Infrastructure\OAuth2\Entity\AccessToken
+    refresh_token_class: App\Infrastructure\OAuth2\Entity\RefreshToken
+    auth_code_class: App\Infrastructure\OAuth2\Entity\AuthCode
+    service:
+      user_provider: App\Infrastructure\OAuth2\Provider\UserProvider
+      options:
+        supported_scopes: cleanfile
+        access_token_lifetime: 43200 #12h
+
+    authorize:
+      form:
+        type: fos_oauth_server_authorize
+        handler: fos_oauth_server.authorize.form.handler.default
+        name: fos_oauth_server_authorize_form
+        validation_groups:
+          - Authorize
+          - Default

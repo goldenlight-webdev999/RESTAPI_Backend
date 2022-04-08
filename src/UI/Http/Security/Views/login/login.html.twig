@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <!-- Custom fonts -->
+    <link href='https://fonts.googleapis.com/css?family=Cabin:700' rel='stylesheet' type='text/css'>
+
+    <!-- Bootstrap Styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="{{ asset('login/style.css') }}">
+    {% include '@security/common/recaptcha.html.twig' %}
+    <title>MetaCleaner - Login</title>
+</head>
+<body>
+<div class="container">
+    <div class="card card-container">
+        <img class="profile-img-card" src="{{ asset('login/avatar.png') }}" />
+        <p class="profile-name-card">MetaCleaner</p>
+        {% if error %}
+            <div style="text-align: center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+        <form action="{{ path('login') }}" method="POST" class="form-signin">
+            <input type="email" id="inputUsername" name="_username" value="{{ last_username }}" class="form-control" placeholder="Email" required autofocus>
+            <input type="password" id="inputPassword" name="_password" class="form-control" placeholder="Password" required>
+
+            <div class="g-recaptcha" data-sitekey="{{ captcha_public_key }}"></div>
+            {#<div id="remember" class="checkbox">#}
+                {#<label>#}
+                    {#<input type="checkbox" name="remember" value="1"> Remember me#}
+                {#</label>#}
+            {#</div>#}
+            <br>
+            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Sign in</button>
+        </form>
+        {#<a href="#" class="forgot-password">#}
+            {#Forgot the password?#}
+        {#</a>#}
+    </div>
+</div>
+</body>
+</html>
